@@ -71,7 +71,7 @@ header {
 }
 
 button {
-    background: #4078c0;
+    background: #40c05c;
     color: #fff;
     border: none;
     border-radius: 18px;
@@ -82,5 +82,13 @@ button {
 }
 
 button:hover {
-    background: #305a8d;
+    background: #349e4b;
+}
+
+#typing {
+    font-size: 0.9em;
+    color: #888;
+    padding: 4px 16px;
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
 }
