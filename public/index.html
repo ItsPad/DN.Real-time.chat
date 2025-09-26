@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realtime Chat</title>
+    <link rel="stylesheet" href="css/style.css"> <!-- เพิ่มบรรทัดนี้ -->
+</head>
+<body>
+    <div class="chat-container">
+        <header>
+            <h2>Realtime Chat</h2>
+            <div id="user-count" style="font-size: 0.9em; margin-top: 4px;">Online: 0</div>
+        </header>
+        <ul id="messages"></ul>
+        <form action="" id="form">
+            <input type="text" id="input" autocomplete="off" placeholder="Write some messages"/>
+            <button>Send</button>
+        </form>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const messages = document.getElementById('messages');
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const userID = Date.now();
+        const userCountDiv = document.getElementById('user-count');
+
+        let name = prompt('What is your desired username?');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if(input.value) {
+                socket.emit('username', name);
+                socket.emit('chat message', {
+                    name: name,
+                    msg: input.value,
+                    user: userID
+                });
+                input.value = '';
+            }
+        })
+
+        socket.on('chat message', (msgObject) => {
+            const message = document.createElement('li');
+            const messageItem = document.createElement('span');
+            messageItem.textContent = `${msgObject.name}: ${msgObject.msg}`;
+            if (msgObject.user === userID) {
+                message.classList.add('right');
+            }
+            message.appendChild(messageItem); 
+            messages.appendChild(message);
+        })
+
+        socket.on('user count', (count) => {
+            userCountDiv.textContent = `Online: ${count}`;
+        });
+    </script>
+</body>
+</html>
